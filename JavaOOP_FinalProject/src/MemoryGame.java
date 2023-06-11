@@ -3,17 +3,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-// Interface to represent an object that can be displayed
+// Interface for displaying objects
 interface Displayable {
     void display();
 }
 
-// Class to represent a Card that implements the Displayable interface
+// Represents a card in the memory game
 class Card implements Displayable {
     private String fruit;
     private boolean isFaceUp;
     private boolean isMatched;
 
+    // Constructor to initialize the Card object with a fruit name
     public Card(String fruit) {
         this.fruit = fruit;
         this.isFaceUp = false;
@@ -42,7 +43,9 @@ class Card implements Displayable {
 
     @Override
     public void display() {
-        if (isFaceUp || isMatched) {
+        if (isMatched) {
+            System.out.print(" - ");
+        } else if (isFaceUp) {
             System.out.print(" " + fruit + " ");
         } else {
             System.out.print(" * ");
@@ -50,14 +53,15 @@ class Card implements Displayable {
     }
 }
 
-// Class to represent a deck of cards
+// Represents a deck of cards in the memory game
 class Deck {
-    private List<Card> cards;
+    private List<Displayable> cards;
 
+    // Constructor to initialize the Deck with a specified number of pairs
     public Deck(int numPairs) {
         cards = new ArrayList<>();
 
-        // Generate a list of fruit names based on the number of pairs
+        // Generate fruit names for the pairs
         List<String> fruitNames = generateFruitNames(numPairs);
 
         // Create pairs of cards with the same fruit and add them to the deck
@@ -67,18 +71,19 @@ class Deck {
             cards.add(new Card(fruit));
         }
 
-        // Shuffle the deck of cards
+        // Shuffle the cards
         Collections.shuffle(cards);
     }
 
-    // Helper method to generate a list of fruit names
+    // Generate a list of fruit names for the pairs
     private List<String> generateFruitNames(int numPairs) {
         List<String> fruitNames = new ArrayList<>();
 
+        // List of available fruit names
         String[] fruits = { "Apple", "Banana", "Cherry", "Grape", "Lemon", "Orange", "Peach", "Pear", "Strawberry",
                 "Watermelon" };
 
-        // Add fruit names to the list based on the number of pairs
+        // Select numPairs number of fruit names from the available list
         for (int i = 0; i < numPairs; i++) {
             fruitNames.add(fruits[i]);
         }
@@ -86,18 +91,20 @@ class Deck {
         return fruitNames;
     }
 
-    public Card getCard(int index) {
+    // Get the card at a specific index in the deck
+    public Displayable getCard(int index) {
         return cards.get(index);
     }
 
+    // Get the total number of cards in the deck
     public int size() {
         return cards.size();
     }
 
+    // Check if all cards in the deck are matched
     public boolean isGameOver() {
-        // Check if all cards in the deck have been matched
-        for (Card card : cards) {
-            if (!card.isMatched()) {
+        for (Displayable card : cards) {
+            if (!((Card) card).isMatched()) {
                 return false;
             }
         }
@@ -105,11 +112,12 @@ class Deck {
     }
 }
 
-// Class to represent a player
+// Represents a player in the memory game
 class Player {
     private String name;
     private int score;
 
+    // Constructor to initialize the Player with a name and score of zero
     public Player(String name) {
         this.name = name;
         this.score = 0;
@@ -123,18 +131,20 @@ class Player {
         return score;
     }
 
+    // Increment the player's score by 1
     public void incrementScore() {
         score++;
     }
 }
 
-// Class to represent the game
+// Represents the game logic and flow
 class Game {
     private Player player;
     private Deck deck;
     private Scanner scanner;
     private int level;
 
+    // Constructor to initialize the game, player, and level
     public Game() {
         scanner = new Scanner(System.in);
         System.out.print("Enter your name: ");
@@ -143,10 +153,12 @@ class Game {
         level = 1;
     }
 
+    // Start playing the memory game
     public void play() {
         System.out.println("Memory Game");
         System.out.println("------------");
 
+        // Play each level until level 5
         while (level <= 5) {
             System.out.println("Level " + level);
             System.out.println("------------");
@@ -154,28 +166,42 @@ class Game {
             int numPairs = level * 2;
             deck = new Deck(numPairs);
 
+            // Play the game until all cards are matched
             while (!deck.isGameOver()) {
                 displayCards();
+
+                // Get the indices of two cards to compare
                 int card1Index = getCardIndex();
                 int card2Index = getCardIndex();
 
-                Card card1 = deck.getCard(card1Index);
-                Card card2 = deck.getCard(card2Index);
+                // Check if the selected cards are different
+                if (card1Index != card2Index) {
+                    // Get the actual card objects from the deck
+                    Displayable card1 = deck.getCard(card1Index);
+                    Displayable card2 = deck.getCard(card2Index);
 
-                if (!card1.isMatched() && !card2.isMatched()) {
-                    card1.setFaceUp(true);
-                    card2.setFaceUp(true);
+                    Card realCard1 = (Card) card1;
+                    Card realCard2 = (Card) card2;
 
-                    if (card1.getFruit().equals(card2.getFruit())) {
-                        System.out.println("Match found!");
-                        player.incrementScore();
-                        card1.setMatched(true);
-                        card2.setMatched(true);
+                    // Check if both cards are face down and not yet matched
+                    if (!realCard1.isMatched() && !realCard2.isMatched()) {
+                        realCard1.setFaceUp(true);
+                        realCard2.setFaceUp(true);
+
+                        // Check if the fruits on the cards match
+                        if (realCard1.getFruit().equals(realCard2.getFruit())) {
+                            System.out.println("Match found!");
+                            player.incrementScore();
+                            realCard1.setMatched(true);
+                            realCard2.setMatched(true);
+                        } else {
+                            System.out.println("No match. Try again.");
+                        }
                     } else {
-                        System.out.println("No match. Try again.");
+                        System.out.println("One or both cards have already been matched. Try again.");
                     }
                 } else {
-                    System.out.println("One or both cards have already been matched. Try again.");
+                    System.out.println("Same card selected. Try again.");
                 }
 
                 System.out.println();
@@ -188,22 +214,19 @@ class Game {
             level++;
         }
 
-        System.out.println("Congratulations, " + player.getName() + "! You beat all levels with a final score of " + player.getScore() + ".");
+        System.out.println(
+                "Congratulations, " + player.getName() + "! You beat all levels with a final score of " + player.getScore() + ".");
     }
 
+    // Display the current state of the cards
     private void displayCards() {
         System.out.println("\nCurrent Cards:");
 
+        // Display the cards in a grid-like format
         for (int i = 1; i <= deck.size(); i++) {
-            Card card = deck.getCard(i - 1);
+            Displayable displayable = deck.getCard(i - 1);
+            displayable.display();
 
-            if (card.isMatched()) {
-                System.out.print("  -  "); // Display matched cards as a separate category
-            } else {
-                card.display();
-            }
-
-            // Add a line break after every 4 cards for better readability
             if (i % 4 == 0) {
                 System.out.println();
             }
@@ -211,6 +234,7 @@ class Game {
         System.out.println();
     }
 
+    // Get the index of a card from user input
     private int getCardIndex() {
         int cardIndex;
         do {
@@ -231,6 +255,7 @@ class Game {
     }
 }
 
+// Main class to start the memory game
 public class MemoryGame {
     public static void main(String[] args) {
         Game game = new Game();
