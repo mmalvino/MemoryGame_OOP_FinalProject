@@ -80,6 +80,7 @@ class Deck {
         List<String> fruitNames = new ArrayList<>();
 
         // List of available fruit names
+        // Can always add more or reduce, or change with car names, character names, etc
         String[] fruits = { "Apple", "Banana", "Cherry", "Grape", "Lemon", "Orange", "Peach", "Pear", "Strawberry",
                 "Watermelon", "Pineapple", "Mango" };
 
@@ -151,6 +152,7 @@ class Game {
         String playerName = scanner.nextLine();
         player = new Player(playerName);
         level = 1;
+        // Can change which level you want to start from, instead of 1 try 5.
     }
 
     // Start playing the memory game
@@ -159,10 +161,14 @@ class Game {
         System.out.println("------------");
 
         // Play each level until level 5
+        // Can change the number of levels, instead of 5 maybe 2, 6, 10, etc.
         while (level <= 5) {
             System.out.println("Level " + level);
             System.out.println("------------");
 
+            // Can change how many cards are shown in a level
+            // Here it's 2 pairs each level = 4 cards each level
+            // Can change 2 --> 4 to show 8 cards each level, 2 --> 3 to show 6
             int numPairs = level * 2;
             deck = new Deck(numPairs);
 
@@ -214,6 +220,7 @@ class Game {
             level++;
         }
 
+        // Print congratulatory message
         System.out.println(
                 "Congratulations, " + player.getName() + "! You beat all levels with a final score of " + player.getScore() + ".");
     }
