@@ -81,7 +81,7 @@ class Deck {
 
         // List of available fruit names
         String[] fruits = { "Apple", "Banana", "Cherry", "Grape", "Lemon", "Orange", "Peach", "Pear", "Strawberry",
-                "Watermelon" };
+                "Watermelon", "Pineapple", "Mango" };
 
         // Select numPairs number of fruit names from the available list
         for (int i = 0; i < numPairs; i++) {
