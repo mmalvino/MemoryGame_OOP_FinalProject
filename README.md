@@ -5,7 +5,7 @@
 ## The Memory Game, a fun and challenging game where players test their memory by flipping over pairs of cards to find matching pairs 🕹️🥳
 **Video demo:** https://drive.google.com/file/d/1s-VP8l0b40Da41_v5g_Nwbi5AIihzlwd/view?usp=sharing
 
-User Manual:
+### User Manual:
 To run the Memory Game program, follow these steps:
 
 * Open an IDE, like IntelliJ.
@@ -15,7 +15,7 @@ To run the Memory Game program, follow these steps:
 * At each level, a set of cards will be displayed face down as a ```*```.
 * The objective is to flip over pairs of cards to find matching pairs.
 * To flip a card, enter its corresponding index.
-* If the cards match, you will earn a point.
+* If the cards match, they will turn into ```-``` and you will earn a point.
 * Continue flipping pairs until all the cards have been matched.
 * The game progresses to the next level once all cards are matched.
 * The game ends when you complete all the levels. Good luck and Have Fun!!🤠
